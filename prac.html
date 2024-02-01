@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe Game Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: aqua;
+            padding: 20px;
+            font-size: 35px;
+            font-family: "Press Start 2P";
+        }
+
+        .gameContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .boxConatiner {
+            display: grid;
+            grid-template-columns: repeat(3, 10vw);
+            grid-template-rows: repeat(3, 10vw);
+        }
+
+        .box {
+            border: 1px solid black;
+            font-size: 7vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #reset {
+            margin: 0 25px;
+            padding: 3px 20px;
+            background-color: rgb(215, 38, 224);
+            font-size: 15px;
+        }
+
+        .box:hover {
+            background-color: rgb(221, 53, 190);
+        }
+
+        .bt {
+            border-top: 0;
+        }
+
+        .bb {
+            border-bottom: 0;
+        }
+
+        .br {
+            border-right: 0;
+        }
+
+        .bl {
+            border-left: 0;
+        }
+
+        .infoContainer {
+            margin-left: 50px;
+        }
+
+        .infoContainer h1 {
+            font-size: 35px;
+        }
+
+        .info {
+            font-size: 23px;
+        }
+
+        .infoTextHead {
+            margin-top: 10px;
+            padding-left: 5px;
+        }
+
+        .imgBox img {
+            width: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        TicTacToe.com
+    </header>
+    <div class="gameContainer">
+        <div class="boxConatiner">
+            <div class="box bt bl"><span class="boxText"></span></div>
+            <div class="box bt"><span class="boxText"></span></div>
+            <div class="box bt br"><span class="boxText"></span></div>
+            <div class="box bl"><span class="boxText"></span></div>
+            <div class="box"><span class="boxText"></span></div>
+            <div class="box br"><span class="boxText"></span></div>
+            <div class="box bl bb"><span class="boxText"></span></div>
+            <div class="box bb"><span class="boxText"></span></div>
+            <div class="box bb br"><span class="boxText"></span></div>
+        </div>
+        <div class="infoContainer">
+            <h1>
+                Welcome to TicTacToe.com
+            </h1>
+            <div class="infoTextHead">
+                <span class="info" id="info">
+                    Turn for: X
+                </span>
+                <button id="reset">Reset</button>
+            </div>
+            <div class="imgBox">
+                <img src="./image.gif" alt="Win-GIF">
+            </div>
+        </div>
+    </div>
+    <!-- js -->
+    <script>
+        let music = new Audio('sound3.mp3');
+        let audioTurn = new Audio("sound4.mp3");
+        let gameover = new Audio("sound2.mp3");
+
+        let turn = "X";
+        let isgameOver = false;
+
+
+        // function to change the turn:
+        const changeturn = () => {
+            return turn === "X" ? "0" : "X";
+        }
+
+
+        // function to check the win:
+        const checkwin = () => {
+            let boxText = document.getElementsByClassName("boxText");
+            let wins = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [2, 4, 6], [0, 4, 8]
+            ];
+            wins.forEach(e => {
+                if ((boxText[e[0]].innerHTML === boxText[e[1]].innerHTML) && (boxText[e[2]].innerHTML === boxText[e[1]].innerHTML) && (boxText[e[0]].innerHTML !== "")) {
+                    document.querySelector(".info").innerHTML = boxText[e[0]].innerHTML + "  Won";
+
+                    e.forEach(index => {
+                        document.getElementsByClassName("box")[index].style.backgroundColor = "lightgreen";
+                    })
+                    isgameOver = true;
+                    document.querySelector(".imgBox").getElementsByTagName("img")[0].style.width = "150px";
+                    
+                }
+
+            });
+
+        };
+
+
+        // game logic;
+        // music.play();
+        let boxes = document.getElementsByClassName("box");
+        Array.from(boxes).forEach(element => {
+            let boxText = element.querySelector(".boxText");
+            element.addEventListener("click", () => {
+                if (boxText.innerHTML === "") {
+                    boxText.innerHTML = turn;
+                    turn = changeturn();
+                    audioTurn.play();
+                    checkwin();
+                    if (!isgameOver) {
+                        document.querySelector('.info').innerHTML = "Turn for:" + turn;
+                    }
+                }
+            })
+        })
+
+
+
+        // reset button logic:
+        document.getElementById("reset").addEventListener("click", () => {
+            let boxTexts = document.querySelectorAll(".boxText");
+            Array.from(boxTexts).forEach(e => {
+                e.innerHTML = "";
+            })
+
+            let boxes = document.querySelectorAll(".box");
+            for(let i=0;i<boxes.length;i++){
+                boxes[i].style.backgroundColor="";
+            }
+            turn = "X";
+            isgameOver = false;
+            document.querySelector('.info').innerHTML = "Turn for:" + turn;
+            document.querySelector(".imgBox").getElementsByTagName(".img")[0].style.width = "0px";
+            
+        })
+    </script>
+</body>
+
+</html>
